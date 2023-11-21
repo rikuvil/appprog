@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Welcome to the Board Game Lending Platform!</h1>
+  <p>Explore our collection of board games and start lending and borrowing today.</p>
+  
+  <ul>
+    <li><a href="{% url 'all_board_games' %}">View All Board Games</a></li>
+    <li><a href="{% url 'all_board_gamers' %}">View All Board Gamers</a></li>
+    <li><a href="{% url 'all_game_loans' %}">View All Game Loans</a></li>
+  </ul>
+{% endblock %}

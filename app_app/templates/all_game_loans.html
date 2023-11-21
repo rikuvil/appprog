@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>All Game Loans</h2>
+  <ul>
+    {% for loan in loans %}
+      <li><a href="{% url 'loan_detail' loan.id %}">{{ loan.board_game.name }} - {{ loan.borrower.name }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}
