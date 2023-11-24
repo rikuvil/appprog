@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>All Board Gamers</h2>
+  <ul>
+    {% for gamer in gamers %}
+      <li><a href="{% url 'board_gamer_detail' gamer.id %}">{{ gamer.name }}</a></li>
+    {% endfor %}
+  </ul>
+{% endblock %}
