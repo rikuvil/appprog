@@ -1,5 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import BoardGame, BoardGamer, GameLoan
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, logout
+from .forms import *
+
 
 # Create your views here.
 
@@ -15,6 +19,20 @@ def all_board_games(request):
 def board_game_detail(request, game_id):
     game = get_object_or_404(BoardGame, pk=game_id)
     return render(request, 'board_game_detail.html', {'game': game})
+
+def new_board_game(request):
+    # Add a new game
+    if request.method != "POST":
+        form = BoardGameForm
+    else:
+        form = BoardGameForm(data=request.POST)
+        if form.is_valid():
+            new_game = form.save(commit=False)
+            new_game.owner = request.user
+            new_game.save()
+            return redirect('all_board_games')
+    context = {'form': form}
+    return render(request, 'new_board_game.html', context)
 
 #views for BoardGamer model
 
@@ -35,3 +53,34 @@ def all_game_loans(request):
 def loan_detail(request, loan_id):
     loan = get_object_or_404(GameLoan, pk=loan_id)
     return render(request, 'loan_detail.html', {'loan': loan})
+
+# Authentication views
+
+# Registration
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('homepage')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
+
+# Login
+def user_login(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('homepage')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'registration/login.html', {'form': form})
+
+# Logout
+def user_logout(request):
+    logout(request)
+    return redirect('homepage')
