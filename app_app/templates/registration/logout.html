@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% load django_bootstrap5 %}¨
+
+
+{% block content %}
+    <form action="{% url 'users:logout' %}" method="post">
+        {% csrf_token %}
+        <button name="submit" class="btn btn-outline-secondary btn-sm">Logout</button>
+    </form>
+
+{% endblock content %}

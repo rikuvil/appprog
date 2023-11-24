@@ -7,4 +7,5 @@
       <li><a href="{% url 'board_game_detail' game.id %}">{{ game.name }}</a></li>
     {% endfor %}
   </ul>
+  <a href="{% url 'new_board_game' %}">Add a new board game</a>
 {% endblock %}
