@@ -8,3 +8,4 @@ from .models import *
 
 admin.site.register(BoardGame)
 admin.site.register(BoardGamer)
+admin.site.register(GameLoan)

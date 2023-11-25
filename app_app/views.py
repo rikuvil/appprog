@@ -34,6 +34,24 @@ def new_board_game(request):
     context = {'form': form}
     return render(request, 'new_board_game.html', context)
 
+def edit_board_game(request, game_id):
+    """Edit an existing board game."""
+    game = BoardGame.objects.get(id=game_id)
+    #game = get_object_or_404(BoardGame, pk=game_id, owner=request.user)
+
+    if request.method != 'POST':
+        #Initial request; pre-fill form with the current entry.
+        form = BoardGameForm(instance=game)
+    else:
+        #POST data submitted; process data.
+        form = BoardGameForm(instance=game, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('board_game_detail', game_id=game.id) 
+
+    context = {'game': game, 'form': form}
+    return render(request,'edit_board_game.html', context)
+
 #views for BoardGamer model
 
 def all_board_gamers(request):

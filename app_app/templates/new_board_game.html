@@ -3,11 +3,15 @@
 
 {% block content %}
 
-    <p> Add a new board game </p>
+    <h2> Add new board game </h2>
         <form action="{% url 'new_board_game' %}" method="post">
             {% csrf_token %}
             {{ form.as_div }}
             <button name="submit">Add board game</button>
         </form>
 
-{% endblock content %}
+        <p>
+            <a href="{% url 'all_board_games' %}">Back to all board games</a>
+        </p>    
+        
+    {% endblock content %}

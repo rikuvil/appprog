@@ -2,6 +2,14 @@
 
 {% block content %}
   <h2>{{ game.name }} Details</h2>
+  <p>Genre: {{ game.genre }}</p>
+  <p>Owner: {{ game.owner }} </p>
   <p>Game ID: {{ game.id }}</p>
   <!-- Add other details as needed -->
+
+  <p>
+    <a href="{% url 'edit_board_game' game_id=game.id %}">
+      Edit game details</a>
+  </p>
+
 {% endblock %}

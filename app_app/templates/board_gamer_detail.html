@@ -4,4 +4,8 @@
   <h2>{{ gamer.name }} Details</h2>
   <p>Gamer ID: {{ gamer.id }}</p>
   <!-- Add other details as needed -->
+
+  <p>
+    <a href="{% url 'all_board_gamers' %}">Back to all board gamers</a>
+  </p>
 {% endblock %}
