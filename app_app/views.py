@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import BoardGame, BoardGamer, GameLoan
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import Http404, HttpResponseForbidden
 from .forms import *
 
 
@@ -34,23 +36,25 @@ def new_board_game(request):
     context = {'form': form}
     return render(request, 'new_board_game.html', context)
 
-def edit_board_game(request, game_id):
-    """Edit an existing board game."""
-    game = BoardGame.objects.get(id=game_id)
-    #game = get_object_or_404(BoardGame, pk=game_id, owner=request.user)
 
-    if request.method != 'POST':
-        #Initial request; pre-fill form with the current entry.
-        form = BoardGameForm(instance=game)
-    else:
-        #POST data submitted; process data.
+## Doesnt work
+def edit_board_game(request, game_id):
+    game = BoardGame.objects.get(id=game_id)
+
+    if request.method == 'POST':
+        # POST data submitted; process data.
         form = BoardGameForm(instance=game, data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect('board_game_detail', game_id=game.id) 
+            return redirect('board_game_detail', game_id=game.id)
+    else:
+        # Initial request; pre-fill form with the current entry.
+        form = BoardGameForm(instance=game)
+    
+    print(form.errors)
 
     context = {'game': game, 'form': form}
-    return render(request,'edit_board_game.html', context)
+    return render(request, 'edit_board_game.html', context)
 
 #views for BoardGamer model
 
@@ -63,6 +67,43 @@ def board_gamer_detail(request, gamer_id):
     return render(request, 'board_gamer_detail.html', {'gamer': gamer})
 
 #views for GameLoan model
+# Function for user to see the games they have loaned in loaned_games
+@login_required
+def loaned_games(request):
+    user = request.user # Get user
+    user_loaned = BoardGame.objects.filter(loaned_to = user) # Get games loaned to user
+    return render(request, 'loaned_games.html', {'user_loaned': user_loaned})
+
+# Function for a user loaning the board game from board_game_details
+@login_required
+def loan_board_game(request, game_id):
+    game = BoardGame.objects.get(id=game_id) # Get boardgame
+    user = request.user # Get users info
+
+    # Check if there are 3 games loaned already to the user
+    check_loaned_count = BoardGame.objects.filter(loaned_to = user).count()
+    if check_loaned_count >= 3:
+        return HttpResponseForbidden('Cannot loan more than 3 games')
+    # If not loan game to user
+    if game.available:
+        game.available = False
+        game.loaned_to = user
+        game.save()
+    return redirect('board_game_detail', game_id=game.id)
+
+# Function to return loaned board game
+@login_required
+def return_board_game(request, game_id):
+    game = BoardGame.objects.get(id=game_id)
+    user = request.user
+    if request.method == "POST":
+        game.available = True
+        game.loaned_to = None
+        game.save()
+        return redirect('loaned_games')
+    
+    return render(request, 'return_board_game.html', {'game': game})
+
 
 def all_game_loans(request):
     loans = GameLoan.objects.all()

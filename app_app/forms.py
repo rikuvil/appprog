@@ -5,5 +5,7 @@ from .models import *
 class BoardGameForm(forms.ModelForm):
     class Meta:
         model = BoardGame
-        fields = ['name', 'genre']
-        labels = {'name': 'Title', 'genre': 'Genre'}
+        fields = ['name', 'genre', 'available']
+        labels = {'name': 'Title', 
+                  'genre': 'Genre', 
+                  'available': 'Available'}

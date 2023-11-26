@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+<!-- DOES NOT WORK IDK WHY :(-->
+
 {% block content %}
   <h2><a href="{% url 'board_game_detail' game.id %}">{{ game }}</a></h2>
 
@@ -7,8 +9,8 @@
 
   <form action="{% url 'edit_board_game' game.id %}" method="post">
     {% csrf_token %}
-    {{ forms.as_div }}
-    <button name="submit">Save changes</button>
+    {{ forms.as_p }}
+    <input type="submit" value="Save">
   </form>
   
   <p>

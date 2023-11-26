@@ -5,10 +5,20 @@
   <p>Genre: {{ game.genre }}</p>
   <p>Owner: {{ game.owner }} </p>
   <p>Game ID: {{ game.id }}</p>
+  {% if game.available %}
+    <p>Available?: Yes</p>
+    <form action="{% url 'loan_board_game' game.id %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Loan Game">
+    </form>
+  {% else %}
+    <p>This game is currently not available</p>
+    <p> Loaned to {{ game.loaned_to }}</p>
+  {% endif %}
   <!-- Add other details as needed -->
 
   <p>
-    <a href="{% url 'edit_board_game' game_id=game.id %}">
+    <a href="{% url 'edit_board_game' game.id %}">
       Edit game details</a>
   </p>
 
