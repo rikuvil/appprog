@@ -7,7 +7,9 @@ from django.utils import timezone
 class BoardGame(models.Model):
     name = models.CharField(max_length=100)
     genre = models.CharField(max_length=100, default='none')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owned_games')
+    available = models.BooleanField(default=True)
+    loaned_to = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='loaned_games')
 
     date_added = models.DateTimeField(default=timezone.now)
     #last_modified = models.DateTimeField(default=timezone.now)
@@ -15,6 +17,9 @@ class BoardGame(models.Model):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name = 'Board game'
 
 class BoardGamer(models.Model):
     name = models.CharField(max_length=100)
