@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>All Board Games</h2>
-  <ul>
+<div class="container mt-4">
+  <h2 class="mb-4">All Board Games</h2>
+  <ul class="list-group">
     {% for game in games %}
-        <li><a href="{% url 'board_game_detail' game.id %}">{{ game.name }}</a></li>
+        <li class="list-group-item"><a href="{% url 'board_game_detail' game.id %}" class="text-decoration-none">{{ game.name }}</a></li>
     {% endfor %}
   </ul>
-  <a href="{% url 'new_board_game' %}">Add a new board game</a>
+  <a href="{% url 'new_board_game' %}" class="btn btn-primary mt-3">Add a new board game</a>
+</div>
 {% endblock %}

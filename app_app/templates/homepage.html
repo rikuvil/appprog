@@ -1,15 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Welcome to the Board Game Lending Platform!</h1>
-  <p>Explore our collection of board games and start lending and borrowing today.</p>
-  
-  <ul>
-    <li><a href="{% url 'all_board_games' %}">View All Board Games</a></li>
-    <li><a href="{% url 'all_board_gamers' %}">View All Board Gamers</a></li>
-    <li><a href="{% url 'all_game_loans' %}">View All Game Loans</a></li>
-    {% if user.is_authenticated %}
-    <li><a href="{% url 'loaned_games' %}">Your loaned games</a></li>
-    {% endif %}
-  </ul>
+<div class="jumbotron">
+  <h1 class="display-4">Welcome to the Board Game Lending Platform!</h1>
+  <p class="lead">Explore our collection of board games and start lending and borrowing today.</p>
+</div> 
+<div class="row">
+  <div class="col-md-6">
+    <ul class="list-group">
+      <li class="list-group-item"><a href="{% url 'all_board_games' %}" class="text-decoration-none">View All Board Games</a></li>
+      <li class="list-group-item"><a href="{% url 'all_board_gamers' %}" class="text-decoration-none">View All Board Gamers</a></li>
+      {% if user.is_authenticated %}
+      <li class="list-group-item"><a href="{% url 'loaned_games' %}" class="text-decoration-none">Your loaned games</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</div>  
 {% endblock %}

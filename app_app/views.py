@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import BoardGame, BoardGamer, GameLoan
+from .models import BoardGame, BoardGamer
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -50,7 +50,7 @@ def new_board_game(request):
     return render(request, 'new_board_game.html', context)
 
 
-## Doesnt work
+@login_required
 def edit_board_game(request, game_id):
     game = BoardGame.objects.get(id=game_id)
 
@@ -149,15 +149,6 @@ def return_board_game(request, game_id):
         return redirect('loaned_games')
     
     return render(request, 'return_board_game.html', {'game': game})
-
-
-def all_game_loans(request):
-    loans = GameLoan.objects.all()
-    return render(request, 'all_game_loans.html', {'loans': loans})
-
-def loan_detail(request, loan_id):
-    loan = get_object_or_404(GameLoan, pk=loan_id)
-    return render(request, 'loan_detail.html', {'loan': loan})
 
 # Authentication views
 
