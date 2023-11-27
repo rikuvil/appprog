@@ -8,6 +8,9 @@ urlpatterns = [
     path('board-game/<int:game_id>/', views.board_game_detail, name='board_game_detail'),
     path('new_board_game', views.new_board_game, name='new_board_game'),
     path('edit_board_game/<int:game_id>/',  views.edit_board_game, name='edit_board_game'),
+
+    path('board_game_review/<int:game_id>/', views.board_game_review, name='board_game_review'),
+    path('edit_board_game_review/<int:review_id>/', views.edit_board_game_review, name='edit_board_game_review'),
     
     path('all-board-gamers/', views.all_board_gamers, name='all_board_gamers'),
     path('board-gamer/<int:gamer_id>/', views.board_gamer_detail, name='board_gamer_detail'),
@@ -22,4 +25,5 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.user_login, name='login'),
     path('logout', views.user_logout, name='logout'),
+    path('account', views.account, name='account'),
 ]

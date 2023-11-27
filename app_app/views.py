@@ -12,6 +12,16 @@ from .forms import *
 def homepage(request):
     return render(request, 'homepage.html')
 
+# Account view
+@login_required
+def account(request):
+    user = request.user
+    owned_games = BoardGame.objects.filter(owner = user)
+    loaned_games = BoardGame.objects.filter(loaned_to = user)
+    reviews = BoardGameReview.objects.filter(owner = user)
+
+    context = {'owned_games': owned_games, 'loaned_games': loaned_games, 'reviews': reviews}
+    return render(request, 'account.html', context)
 #views for BoardGame model
 
 def all_board_games(request):
@@ -20,8 +30,11 @@ def all_board_games(request):
 
 def board_game_detail(request, game_id):
     game = get_object_or_404(BoardGame, pk=game_id)
-    return render(request, 'board_game_detail.html', {'game': game})
+    reviews = BoardGameReview.objects.filter(game=game).order_by("-date_added")
+    context = {'game': game, 'reviews': reviews}
+    return render(request, 'board_game_detail.html', context)
 
+@login_required
 def new_board_game(request):
     # Add a new game
     if request.method != "POST":
@@ -56,6 +69,39 @@ def edit_board_game(request, game_id):
     context = {'game': game, 'form': form}
     return render(request, 'edit_board_game.html', context)
 
+# Review views
+@login_required
+def board_game_review(request, game_id):
+    game = BoardGame.objects.get(id = game_id)
+
+    if request.method == "POST":
+        form = BoardGameReviewForm(data=request.POST)
+        if form.is_valid():
+            new_review = form.save(commit=False)
+            new_review.owner = request.user
+            new_review.game = game
+            new_review.save()
+            return redirect('board_game_detail', game_id)
+    else:
+        form = BoardGameReviewForm()
+    context = {"game": game, 'form': form}
+    return render(request, 'board_game_review.html', context)
+
+@login_required
+def edit_board_game_review(request, review_id):
+    review = BoardGameReview.objects.get(id=review_id)
+    game = review.game
+    
+    if request.method == "POST":
+        form= BoardGameReviewForm(instance=review, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('board_game_detail', game_id = game.id)
+    else:
+        form = BoardGameReviewForm(instance=review)
+    context = {'review': review, 'game': game, 'form': form}
+    return render(request, 'edit_board_game_review.html', context)    
+
 #views for BoardGamer model
 
 def all_board_gamers(request):
@@ -83,7 +129,7 @@ def loan_board_game(request, game_id):
     # Check if there are 3 games loaned already to the user
     check_loaned_count = BoardGame.objects.filter(loaned_to = user).count()
     if check_loaned_count >= 3:
-        return HttpResponseForbidden('Cannot loan more than 3 games')
+        return HttpResponseForbidden('You cannot loan more than 3 games at the same time')
     # If not loan game to user
     if game.available:
         game.available = False
