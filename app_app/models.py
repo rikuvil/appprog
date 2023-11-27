@@ -33,7 +33,7 @@ class BoardGamer(models.Model):
     
 
 class BoardGameReview(models.Model):
-    review = models.TextField()
+    review = models.CharField(max_length=256)
     stars = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     favourite = models.BooleanField(default=False)
@@ -49,16 +49,3 @@ class BoardGameReview(models.Model):
         return f'{self.review} by {self.owner}'
 
 
-class GameLoan(models.Model):
-    board_game = models.ForeignKey(BoardGame, on_delete=models.CASCADE)
-    borrower = models.ForeignKey(User, on_delete=models.CASCADE)
-    #borrower = models.ForeignKey(BoardGamer, on_delete=models.CASCADE)
-    loan_date = models.DateTimeField(auto_now_add=True)
-    return_date = models.DateTimeField(null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.board_game} - {self.borrower} - {self.loan_date}"
-    
-    #Display the most recent loan first
-    class Meta:
-        ordering = ['-loan_date']

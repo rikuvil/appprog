@@ -1,14 +1,30 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container mt-4">
     <h2>Account details</h2>
-    <p>Owned games</p>
-    {% for game in owned_games %}
-        <li><a href="{% url 'board_game_detail' game.id %}">{{ game.name }}</a></li>
-    {% endfor %}
-    <p>Loaned games</p>
-    {% for game in loaned_games %}
-        <li><a href="{% url 'board_game_detail' game.id %}">{{ game.name }}</a></li>
-        --- <a href="{% url 'return_board_game' game.id %}">Return game</a>
-    {% endfor %}
+
+    <div class="mb-4">
+        <h4>Owned games</h4>
+        <ul class="list-group">
+        {% for game in owned_games %}
+            <li class="list-group-item">
+                <a href="{% url 'board_game_detail' game.id %}" class="text-decoration-none">{{ game.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    </div>
+
+    <div class="mb-4">
+        <h4>Loaned games</h4>
+        <ul class="list-group">
+        {% for game in loaned_games %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{% url 'board_game_detail' game.id %}" class="text-decoration-none">{{ game.name }}</a>
+                <a href="{% url 'return_board_game' game.id %}" class="text-decoration-none">Return game</a>
+            </li>
+        {% endfor %}
+        </ul>      
+    </div>
+</div>
 {% endblock %}
