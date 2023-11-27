@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<p><a href="{% url 'board_game_detail' game.id %}">{{ book }}</a></p>
+
+<p>Edit review:</p>
+    <form action="{% url 'edit_board_game_review' review.id%}" method="post">
+        {% csrf_token %}
+        {{ form.as_div }}
+        <button name="submit">Save changes</button>
+    </form>
+
+{% endblock content %}

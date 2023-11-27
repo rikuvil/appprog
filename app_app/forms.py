@@ -9,3 +9,11 @@ class BoardGameForm(forms.ModelForm):
         labels = {'name': 'Title', 
                   'genre': 'Genre', 
                   'available': 'Available'}
+        
+class BoardGameReviewForm(forms.ModelForm):
+    class Meta:
+        model = BoardGameReview
+        fields = ['review', 'stars', 'favourite']
+        labels = {'review': 'Review',
+                  'stars': 'Stars',
+                  'favourite': 'Favourite'}

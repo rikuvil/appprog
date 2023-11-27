@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 
@@ -29,6 +30,24 @@ class BoardGamer(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class BoardGameReview(models.Model):
+    review = models.TextField()
+    stars = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    favourite = models.BooleanField(default=False)
+
+    # Times
+    date_added = models.DateTimeField(auto_now_add=True)
+    date_modified = models.DateTimeField(auto_now=True)
+
+    # Game
+    game = models.ForeignKey(BoardGame, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f'{self.review} by {self.owner}'
+
 
 class GameLoan(models.Model):
     board_game = models.ForeignKey(BoardGame, on_delete=models.CASCADE)

@@ -18,8 +18,14 @@
   <!-- Add other details as needed -->
 
   <p>
+    <a href="{% url 'all_board_games' %}">Return to board games</a>
     <a href="{% url 'edit_board_game' game.id %}">
       Edit game details</a>
   </p>
+  <p>
+    <a href="{% url 'board_game_review' game.id%}">Review game</a>
+  </p>
+
+
 
 {% endblock %}
