@@ -25,7 +25,22 @@
   <p>
     <a href="{% url 'board_game_review' game.id%}">Review game</a>
   </p>
-
+  <ul>
+    {% for review in reviews %}
+    <div>
+        <!---Header with time stamp and edit link-->
+        <h4 >
+            {{ review.date_added }}
+            <small><a href="{% url 'edit_board_game_review' review.id %}">Edit review</a></small>
+        </h4>
+        <!---Entry text-->
+        <div>{{ review.review|linebreaks }}</div>
+    </div>
+    </li>
+    {% empty %}
+    <li> There are no reviews</li>
+    {% endfor %}
+</ul>
 
 
 {% endblock %}

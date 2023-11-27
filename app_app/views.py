@@ -30,7 +30,9 @@ def all_board_games(request):
 
 def board_game_detail(request, game_id):
     game = get_object_or_404(BoardGame, pk=game_id)
-    return render(request, 'board_game_detail.html', {'game': game})
+    reviews = BoardGameReview.objects.filter(game=game).order_by("-date_added")
+    context = {'game': game, 'reviews': reviews}
+    return render(request, 'board_game_detail.html', context)
 
 @login_required
 def new_board_game(request):
@@ -84,6 +86,21 @@ def board_game_review(request, game_id):
         form = BoardGameReviewForm()
     context = {"game": game, 'form': form}
     return render(request, 'board_game_review.html', context)
+
+@login_required
+def edit_board_game_review(request, review_id):
+    review = BoardGameReview.objects.get(id=review_id)
+    game = review.game
+    
+    if request.method == "POST":
+        form= BoardGameReviewForm(instance=review, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('board_game_detail', game_id = game.id)
+    else:
+        form = BoardGameReviewForm(instance=review)
+    context = {'review': review, 'game': game, 'form': form}
+    return render(request, 'edit_board_game_review.html', context)    
 
 #views for BoardGamer model
 

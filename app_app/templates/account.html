@@ -11,8 +11,4 @@
         <li><a href="{% url 'board_game_detail' game.id %}">{{ game.name }}</a></li>
         --- <a href="{% url 'return_board_game' game.id %}">Return game</a>
     {% endfor %}
-    <p>My reviews</p>
-    {% for review in reviews %}
-        <li><a href="{% url 'board_game_review' review.id %}">{{ review.game }}</a></li>
-    {% endfor %}
 {% endblock %}
