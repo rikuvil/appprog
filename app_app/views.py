@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import BoardGame, BoardGamer
+from .models import BoardGame
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -124,16 +124,6 @@ def delete_review(request, review_id):
         return redirect('all_reviews')
     
     return render(request, 'confirm_delete.html', {'entity': 'Review', 'item': review})
-
-#views for BoardGamer model
-
-def all_board_gamers(request):
-    gamers = BoardGamer.objects.all()
-    return render(request, 'all_board_gamers.html', {'gamers': gamers})
-
-def board_gamer_detail(request, gamer_id):
-    gamer = get_object_or_404(BoardGamer, pk=gamer_id)
-    return render(request, 'board_gamer_detail.html', {'gamer': gamer})
 
 #views for GameLoan model
 # Function for user to see the games they have loaned in loaned_games

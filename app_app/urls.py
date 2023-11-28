@@ -14,9 +14,6 @@ urlpatterns = [
     path('edit_board_game_review/<int:review_id>/', views.edit_board_game_review, name='edit_board_game_review'),
     path('delete_review/<int:review_id>/', views.delete_review, name='delete_review'),
     
-    path('all-board-gamers/', views.all_board_gamers, name='all_board_gamers'),
-    path('board-gamer/<int:gamer_id>/', views.board_gamer_detail, name='board_gamer_detail'),
-    
     path('loan_board_game/<int:game_id>', views.loan_board_game, name='loan_board_game'),
     path('return_board_game/<int:game_id>/', views.return_board_game, name='return_board_game'),
     path('loaned_games/', views.loaned_games, name='loaned_games'),
