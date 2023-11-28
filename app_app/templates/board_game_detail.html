@@ -8,7 +8,7 @@
     <p class="mb-0">Owner: {{ game.owner }} </p>
     <p class="mb-0">Game ID: {{ game.id }}</p>
     {% if game.available %}
-      <p class="mb-0">Available?: Yes</p>
+      <p class="mb-0">Available: Yes</p>
       <form action="{% url 'loan_board_game' game.id %}" method="post">
         {% csrf_token %}
         <input type="submit" value="Loan Game" class="btn btn-primary mt-2">

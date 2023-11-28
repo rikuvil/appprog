@@ -129,13 +129,18 @@ def loan_board_game(request, game_id):
     # Check if there are 3 games loaned already to the user
     check_loaned_count = BoardGame.objects.filter(loaned_to = user).count()
     if check_loaned_count >= 3:
-        return HttpResponseForbidden('You cannot loan more than 3 games at the same time')
+        return redirect('more_than_3_games_error')
+        #return HttpResponseForbidden('You cannot loan more than 3 games at the same time')
     # If not loan game to user
     if game.available:
         game.available = False
         game.loaned_to = user
         game.save()
     return redirect('board_game_detail', game_id=game.id)
+
+@login_required
+def more_than_3_games_error(request):
+    return render(request, 'more_than_3_games_error.html')
 
 # Function to return loaned board game
 @login_required

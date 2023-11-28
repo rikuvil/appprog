@@ -18,6 +18,7 @@ urlpatterns = [
     path('loan_board_game/<int:game_id>', views.loan_board_game, name='loan_board_game'),
     path('return_board_game/<int:game_id>/', views.return_board_game, name='return_board_game'),
     path('loaned_games/', views.loaned_games, name='loaned_games'),
+    path('error/', views.more_than_3_games_error, name='more_than_3_games_error'),
 
 
     path('register/', views.register, name='register'),
