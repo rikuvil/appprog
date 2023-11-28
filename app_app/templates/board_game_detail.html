@@ -7,6 +7,8 @@
     <p class="mb-0">Genre: {{ game.genre }}</p>
     <p class="mb-0">Owner: {{ game.owner }} </p>
     <p class="mb-0">Game ID: {{ game.id }}</p>
+    <p class="mb-0">Max Players: {{ game.max_players }}</p>
+    <p class="mb-0">Estimated Play Time: {{ game.play_time }} hours</p>
     {% if game.available %}
       <p class="mb-0">Available: Yes</p>
       <form action="{% url 'loan_board_game' game.id %}" method="post">
@@ -15,7 +17,7 @@
       </form>
     {% else %}
       <p class="mb-0">This game is currently not available</p>
-      <p class="mb-0"> Loaned to {{ game.loaned_to }}</p>
+      <p class="mb-0">Loaned to {{ game.loaned_to }} since {{ game.date_loaned }}</p>
     {% endif %}
   </div>
   <!-- Add other details as needed -->
@@ -23,8 +25,15 @@
   <div class="mb-3">
     <p class="mb-0">
       <a href="{% url 'all_board_games' %}" class="btn btn-primary mt-2">Return to board games</a>
-      <a href="{% url 'edit_board_game' game.id %}" class="btn btn-primary mt-2">
-        Edit game details</a>
+      {% if user.is_authenticated %}
+        {% if user == game.owner %}
+          <a href="{% url 'edit_board_game' game.id %}" class="btn btn-primary mt-2">Edit game details</a>
+          <a href="{% url 'delete_board_game' game.id %}" class="btn btn-secondary ml-2 mt-2">Delete game</a>
+        {% endif %}
+        {% if user == game.loaned_to %}
+            <a href="{% url 'return_board_game' game.id %}" class="btn btn-secondary ml-2 mt-2">Return game</a>
+        {% endif %}
+      {% endif %}
     </p>
     <p class="mb-0">
       <a href="{% url 'board_game_review' game.id%}" class="btn btn-primary mt-4">Review game</a>
@@ -35,24 +44,29 @@
   <ul class="list-group">
     {% for review in reviews %}
     <li class="list-group-item">
-    <div>
+      <div>
         <!---Header with time stamp and edit link-->
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <h6 class="mb-0">{{ review.date_added }}</h6>
-              <p >Rating: {{ review.stars }} By: {{ review.owner }}</p> 
-            </div>
-              <small><a href="{% url 'edit_board_game_review' review.id %}">Edit review</a></small>
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="mb-0">{{ review.date_added }}</h6>
+            <p >Rating: {{ review.stars }} By: {{ review.owner }}</p> 
           </div>
+          {% if user.is_authenticated and user == review.owner %}
+            <small>
+              <a href="{% url 'edit_board_game_review' review.id %}" class="btn btn-sm btn-primary">Edit review</a>
+            </small>
+            <small>
+              <a href="{% url 'delete_review' review.id %}" class="btn btn-sm btn-secondary ml-2">Delete review</a>
+            </small>
+          {% endif %}
+        </div>
         <!---Entry text-->
         <div class="mt-2">{{ review.review|linebreaks }}</div>
-    </div>
+      </div>
     </li>
     {% empty %}
     <li class="list-group-item"> There are no reviews</li>
     {% endfor %}
   </ul>
 </div>
-
-
 {% endblock %}

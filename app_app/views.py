@@ -5,6 +5,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseForbidden
 from .forms import *
+from django.contrib import messages
 
 
 # Create your views here.
@@ -22,6 +23,7 @@ def account(request):
 
     context = {'owned_games': owned_games, 'loaned_games': loaned_games, 'reviews': reviews}
     return render(request, 'account.html', context)
+
 #views for BoardGame model
 
 def all_board_games(request):
@@ -36,9 +38,8 @@ def board_game_detail(request, game_id):
 
 @login_required
 def new_board_game(request):
-    # Add a new game
     if request.method != "POST":
-        form = BoardGameForm
+        form = BoardGameForm()
     else:
         form = BoardGameForm(data=request.POST)
         if form.is_valid():
@@ -46,9 +47,9 @@ def new_board_game(request):
             new_game.owner = request.user
             new_game.save()
             return redirect('all_board_games')
+    
     context = {'form': form}
     return render(request, 'new_board_game.html', context)
-
 
 @login_required
 def edit_board_game(request, game_id):
@@ -68,6 +69,18 @@ def edit_board_game(request, game_id):
 
     context = {'game': game, 'form': form}
     return render(request, 'edit_board_game.html', context)
+
+@login_required
+def delete_board_game(request, game_id):
+    game = get_object_or_404(BoardGame, pk=game_id)
+
+    if request.user == game.owner:
+        if request.method == 'POST':
+            game.delete()
+            return redirect('all_board_games')
+        return render(request, 'confirm_delete.html', {'entity': 'Board Game', 'item': game})
+    else:
+        return redirect('all_board_games')
 
 # Review views
 @login_required
@@ -100,7 +113,17 @@ def edit_board_game_review(request, review_id):
     else:
         form = BoardGameReviewForm(instance=review)
     context = {'review': review, 'game': game, 'form': form}
-    return render(request, 'edit_board_game_review.html', context)    
+    return render(request, 'edit_board_game_review.html', context)  
+
+@login_required
+def delete_review(request, review_id):
+    review = get_object_or_404(BoardGameReview, pk=review_id)
+    
+    if request.method == 'POST' and request.user == review.owner:
+        review.delete()
+        return redirect('all_reviews')
+    
+    return render(request, 'confirm_delete.html', {'entity': 'Review', 'item': review})
 
 #views for BoardGamer model
 
@@ -135,6 +158,7 @@ def loan_board_game(request, game_id):
     if game.available:
         game.available = False
         game.loaned_to = user
+        game.date_loaned = timezone.now()
         game.save()
     return redirect('board_game_detail', game_id=game.id)
 
