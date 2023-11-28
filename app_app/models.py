@@ -24,17 +24,7 @@ class BoardGame(models.Model):
     
     class Meta:
         verbose_name = 'Board game'
-
-class BoardGamer(models.Model):
-    name = models.CharField(max_length=100)
-    #user = models.OneToOneField(User, on_delete=models.CASCADE)
-    #borrowed_games = models.ManyToManyField(BoardGame, through='GameLoan')
-    # Add other fields as needed
-
-    def __str__(self):
-        return self.name
-    
-
+        
 class BoardGameReview(models.Model):
     review = models.CharField(max_length=256)
     stars = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
