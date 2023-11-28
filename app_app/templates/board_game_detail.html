@@ -1,30 +1,50 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<p class="mt-3">
+  <a href="{% url 'all_board_games' %}" class="text-decoration-none">Return to all board games</a>
+</p>
+
 <div class="container mt-4">
   <h2>{{ game.name }} Details</h2>
-  <div class="mb-3">
-    <p class="mb-0">Genre: {{ game.genre }}</p>
-    <p class="mb-0">Owner: {{ game.owner }} </p>
-    <p class="mb-0">Game ID: {{ game.id }}</p>
-    <p class="mb-0">Max Players: {{ game.max_players }}</p>
-    <p class="mb-0">Estimated Play Time: {{ game.play_time }} hours</p>
-    {% if game.available %}
-      <p class="mb-0">Available: Yes</p>
-      <form action="{% url 'loan_board_game' game.id %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="Loan Game" class="btn btn-primary mt-2">
-      </form>
-    {% else %}
-      <p class="mb-0">This game is currently not available</p>
-      <p class="mb-0">Loaned to {{ game.loaned_to }} since {{ game.date_loaned }}</p>
-    {% endif %}
-  </div>
+  <ul class="list-group">
+      <div class="mb-3">
+        <li class="list-group-item">
+          <p class="mb-0">Genre: {{ game.genre }}</p>
+        </li>
+        <li class="list-group-item">
+          <p class="mb-0">Owner: {{ game.owner }} </p>
+        </li>
+        <li class="list-group-item">
+          <p class="mb-0">Game ID: {{ game.id }}</p>
+        </li>
+        <li class="list-group-item">
+          <p class="mb-0">Max Players: {{ game.max_players }}</p>
+        </li>
+        <li class="list-group-item">
+          <p class="mb-0">Estimated Play Time: {{ game.play_time }} hours</p>
+        </li>
+        <li class="list-group-item">
+          {% if user.is_authenticated %}
+            {% if game.available %}
+              <p class="mb-0">Available: Yes</p>
+              <form action="{% url 'loan_board_game' game.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Loan Game" class="btn btn-success mt-2">
+              </form>
+            {% else %}
+              <p class="mb-0">This game is currently not available</p>
+              <p class="mb-0">Loaned to {{ game.loaned_to }} since {{ game.date_loaned }}</p>
+            {% endif %}
+          {% endif %}
+        </li>
+      </div>
+    </li>
+  </ul>
   <!-- Add other details as needed -->
 
   <div class="mb-3">
     <p class="mb-0">
-      <a href="{% url 'all_board_games' %}" class="btn btn-primary mt-2">Return to board games</a>
       {% if user.is_authenticated %}
         {% if user == game.owner %}
           <a href="{% url 'edit_board_game' game.id %}" class="btn btn-primary mt-2">Edit game details</a>
@@ -35,8 +55,11 @@
         {% endif %}
       {% endif %}
     </p>
+    <hr class="dotted">
     <p class="mb-0">
-      <a href="{% url 'board_game_review' game.id%}" class="btn btn-primary mt-4">Review game</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'board_game_review' game.id%}" class="btn btn-primary mt-4">Review game</a>
+      {% endif %} 
     </p>
   </div>
 

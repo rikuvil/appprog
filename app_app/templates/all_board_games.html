@@ -8,6 +8,8 @@
         <li class="list-group-item"><a href="{% url 'board_game_detail' game.id %}" class="text-decoration-none">{{ game.name }}</a></li>
     {% endfor %}
   </ul>
-  <a href="{% url 'new_board_game' %}" class="btn btn-primary mt-3">Add a new board game</a>
+  {% if user.is_authenticated %}
+    <a href="{% url 'new_board_game' %}" class="btn btn-primary mt-3">Add New Board Game</a>
+  {% endif %}
 </div>
 {% endblock %}
