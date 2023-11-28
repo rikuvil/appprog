@@ -8,11 +8,14 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 class BoardGame(models.Model):
     name = models.CharField(max_length=100)
     genre = models.CharField(max_length=100, default='none')
+    max_players = models.PositiveIntegerField(default=1)
+    play_time = models.FloatField(default=1.0)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owned_games')
     available = models.BooleanField(default=True)
     loaned_to = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='loaned_games')
 
     date_added = models.DateTimeField(default=timezone.now)
+    date_loaned = models.DateTimeField(default=None, blank=True, null=True)
     #last_modified = models.DateTimeField(default=timezone.now)
     # Add other fields as needed
 
