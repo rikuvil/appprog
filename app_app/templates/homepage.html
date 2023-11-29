@@ -10,7 +10,7 @@
     <ul class="list-group">
       <li class="list-group-item"><a href="{% url 'all_board_games' %}" class="text-decoration-none">View All Board Games</a></li>
       {% if user.is_authenticated %}
-      <li class="list-group-item"><a href="{% url 'loaned_games' %}" class="text-decoration-none">Your loaned games</a></li>
+      <li class="list-group-item"><a href="{% url 'loaned_games' %}" class="text-decoration-none">Your Loaned Games</a></li>
       {% endif %}
     </ul>
   </div>

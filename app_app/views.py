@@ -118,10 +118,11 @@ def edit_board_game_review(request, review_id):
 @login_required
 def delete_review(request, review_id):
     review = get_object_or_404(BoardGameReview, pk=review_id)
+    game = review.game
     
     if request.method == 'POST' and request.user == review.owner:
         review.delete()
-        return redirect('all_reviews')
+        return redirect('board_game_detail', game_id = game.id)
     
     return render(request, 'confirm_delete.html', {'entity': 'Review', 'item': review})
 
